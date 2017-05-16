@@ -28,7 +28,7 @@ from time import strftime
 from time import localtime
 from io import BytesIO
 
-from .command import Command
+from ..commands.command import Command
 
 __all__ = ["RoomInfoCommand"]
 
@@ -48,15 +48,16 @@ class RoomInfoCommand(Command):
             self.post("{}: No room infos for you!".format(msg.nick))
             return True
         RoomInfoCommand.last_check = time()
+        config = self.room.config.get
         info = []
-        info += "{:>20}: {}".format("Owner", self.conf_key("owner")),
-        info += "{:>20}: {}".format("MOTD", self.conf_key("motd")),
-        info += "{:>21} {}".format("Is room deactivated?", self.conf_key("disabled")),
-        info += "{:>20}: {} hours".format("File time to live", int(self.conf_key("ttl")/3600)),
-        info += "{:>20}: {:.2f} GiB".format("Max file size", self.conf_key("max_file")/FAC),
-        info += "{:>20}: {}".format("Max message length", self.conf_key("max_message")),
+        info += "{:>20}: {}".format("Owner", config("owner")),
+        info += "{:>20}: {}".format("MOTD", config("motd")),
+        info += "{:>21} {}".format("Is room deactivated?", config("disabled")),
+        info += "{:>20}: {} hours".format("File time to live", int(config("ttl")/3600)),
+        info += "{:>20}: {:.2f} GiB".format("Max file size", config("max_file")/FAC),
+        info += "{:>20}: {}".format("Max message length", config("max_message")),
         info += "{:>20}: {}".format("Room creation time", \
-            strftime("%a, %d %b %Y %H:%M:%S", localtime(self.conf_key("creation_time")))),
+            strftime("%a, %d %b %Y %H:%M:%S", localtime(config("creation_time")))),
         info = "\n".join(info)
         LOGGER.warning("\n%s", info)
         info = bytes(info, "utf-8")
@@ -66,6 +67,3 @@ class RoomInfoCommand(Command):
         if fid:
             self.post("{}: @{}", msg.nick, fid)
         return True
-
-    def conf_key(self, key):
-        return self.room.config.get(key)
