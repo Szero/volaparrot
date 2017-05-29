@@ -53,9 +53,9 @@ class RoomInfoCommand(Command):
         info += "{:>20}: {}".format("Owner", config("owner")),
         info += "{:>20}: {}".format("MOTD", config("motd")),
         info += "{:>21} {}".format("Is room deactivated?", config("disabled")),
-        info += "{:>20}: {} hours".format("File time to live", int(config("ttl")/3600)),
+        info += "{:>20}: {:.2f} hours".format("File time to live", int(config("ttl")/3600)),
         info += "{:>20}: {:.2f} GiB".format("Max file size", config("max_file")/FAC),
-        info += "{:>20}: {}".format("Max message length", config("max_message")),
+        info += "{:>20}: {} characters".format("Max message length", config("max_message")),
         info += "{:>20}: {}".format("Room creation time", \
             strftime("%a, %d %b %Y %H:%M:%S", localtime(config("creation_time")/1000))),
         info = "\n".join(info)
