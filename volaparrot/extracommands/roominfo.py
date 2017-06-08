@@ -50,13 +50,15 @@ class RoomInfoCommand(Command):
         RoomInfoCommand.last_check = time()
         config = self.room.config.get
         info = []
-        info += "{:>20}: {}".format("Owner", config("owner")),
-        info += "{:>20}: {}".format("MOTD", config("motd")),
-        info += "{:>21} {}".format("Is room deactivated?", config("disabled")),
-        info += "{:>20}: {:.2f} hours".format("File time to live", int(config("ttl")/3600)),
-        info += "{:>20}: {:.2f} GiB".format("Max file size", config("max_file")/FAC),
-        info += "{:>20}: {} characters".format("Max message length", config("max_message")),
-        info += "{:>20}: {}".format("Room creation time", \
+        info += "{:>19}: {}".format("Room ID", self.room.name),
+        info += "{:>19}: {}".format("Owner", config("owner")),
+        info += "{:>19}: {}".format("MOTD", config("motd")),
+        info += "{:>19}: {}".format("Is room disabled? ", \
+                "Yes" if config("disabled") else "No"),
+        info += "{:>19}: {:.2f} hours".format("File time to live", int(config("ttl")/3600)),
+        info += "{:>19}: {:.2f} GiB".format("Max file size", config("max_file")/FAC),
+        info += "{:>19}: {} characters".format("Max message length", config("max_message")),
+        info += "{:>19}: {}".format("Room creation time", \
             strftime("%a, %d %b %Y %H:%M:%S", localtime(config("creation_time")/1000))),
         info = "\n".join(info)
         LOGGER.warning("\n%s", info)
