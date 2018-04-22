@@ -59,7 +59,7 @@ class RoomInfoCommand(Command):
         info += "{:>19}: {:.2f} GiB".format("Max file size", config("max_file")/FAC),
         info += "{:>19}: {} charaters".format("Max message length", config("max_message")),
         info += "{:>19}: {}".format("Room creation time", \
--           strftime("%a, %d %b %Y %H:%M:%S", localtime(config("creation_time")/1000))),
+            strftime("%a, %d %b %Y %H:%M:%S", localtime(config("creation_time")/1000))),
         info = "\n".join(info)
         LOGGER.warning("\n%s", info)
         info = bytes(info, "utf-8")
