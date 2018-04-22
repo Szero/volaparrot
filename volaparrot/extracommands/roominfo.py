@@ -23,8 +23,9 @@ THE SOFTWARE.
 
 import logging
 
-
 from time import time
+from time import strftime
+from time import localtime
 from io import BytesIO
 
 from ..commands.command import Command
@@ -37,12 +38,14 @@ FAC = 1024.0 * 1024.0 * 1024.0
 
 class RoomInfoCommand(Command):
 
+    #pylint: disable=trailing-comma-tuple
+
     handlers = "!roominfo", "!rumfo"
     last_check = 0
 
     def handle_cmd(self, cmd, remainder, msg):
         if RoomInfoCommand.last_check + 120 > time():
-            return
+            return True
         if not self.allowed(msg):
             self.post("{}: No room infos for you!".format(msg.nick))
             return True
@@ -54,7 +57,9 @@ class RoomInfoCommand(Command):
         info += "{:>19}: {}".format("MOTD", config("motd")),
         info += "{:>19}: {:.2f} hours".format("File time to live", int(config("ttl")/3600)),
         info += "{:>19}: {:.2f} GiB".format("Max file size", config("max_file")/FAC),
-        info += "{:>19}: {} characters".format("Max message length", config("max_message")),
+        info += "{:>19}: {} charaters".format("Max message length", config("max_message")),
+        info += "{:>19}: {}".format("Room creation time", \
+-           strftime("%a, %d %b %Y %H:%M:%S", localtime(config("creation_time")/1000))),
         info = "\n".join(info)
         LOGGER.warning("\n%s", info)
         info = bytes(info, "utf-8")
